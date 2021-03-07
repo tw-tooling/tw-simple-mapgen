@@ -1,5 +1,4 @@
-import sys, zlib, io
-import numpy as np
+import sys, zlib
 
 
 def readInt(f):
