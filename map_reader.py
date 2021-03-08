@@ -126,7 +126,7 @@ def read(filename, verbose=False):
         # header
         signature = f.read(4)
         version, size, swaplen, num_itemtypes, num_items, num_rawdata, item_area_size, data_area_size = [readInt(f) for i in range(8)]
-        if verbose: print(f'{version = }, {size = }, {swaplen = }, {num_itemtypes = }, {num_items = }, {num_rawdata = }, {item_area_size = }, {data_area_size = }')
+        if verbose: print(f'header: {version = }, {size = }, {swaplen = }, {num_itemtypes = }, {num_items = }, {num_rawdata = }, {item_area_size = }, {data_area_size = }')
 
         # items info
         itemtypes = [tuple(readInt(f) for x in range(3)) for i in range(num_itemtypes)]  # (type, start, count)
@@ -143,6 +143,11 @@ def read(filename, verbose=False):
 
         # compressed data
         data = [zlib.decompress(f.read(l)) for l in compressed_data_lengths]
+
+        if verbose:
+            print('item types:')
+            for i, typename in enumerate(['version', 'info', 'image', 'envelopes', 'group', 'layer', 'envpoint']):
+                print(f'{len([x for x in items if x.type == i]):4d} {typename}')
 
         return items, data
 

@@ -6,8 +6,8 @@ def toByte(x):
 
 
 class Item:
-    def __init__(self, type, data):
-        self.id = 1
+    def __init__(self, id, type, data):
+        self.id = id
         self.type = type
         self.data = data
     
@@ -25,7 +25,7 @@ def save_map(items, data):
     # calculate itemtypes
     itemtypes = []
     items_considered_so_far = 0
-    for itemtype in range(6):  # TODO: check if 6 is correct
+    for itemtype in range(7):  # TODO: check if 7 is correct
         count = len([x for x in items if x.type == itemtype])
         if count > 0:
             itemtypes.append((itemtype, items_considered_so_far, count))
@@ -76,9 +76,16 @@ def save_map(items, data):
 
 
 def create_map():
-    items = [Item(0, [42])]
+    # ids should probably be unique per type
+    # items should be ordered by type
+    # layers: version, type (invalid, game, tiles, quads), flags, version, ...
+
+    items = [Item(0, 0, [1])]  # add a `version 1` item at the beginning
     data = []
 
+    # TODO
+
+    items += [Item(0, 6, [])]  # add an empty envpoint? item at the end
     save_map(items, data)
 
 
