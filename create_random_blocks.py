@@ -6,23 +6,24 @@ import sys
 
 def create_random_blocks(filename=None):
     # create the map matrix
-    game = np.zeros((200,200,4), dtype='B')
-    tiles = np.zeros((200,200,4), dtype='B')
+    game = np.zeros((50,50,4), dtype='B')
+    tiles = np.zeros((50,50,4), dtype='B')
 
     # add content
     game[0,:,0] = 1  # top wall
     game[-1,:,0] = 1  # ground wall
     game[:,0,0] = 1  # left wall
     game[:,-1,0] = 1  # right wall
-    game[-2,99,0] = 192  # spawn
-    game[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95  # random blocks
+    game[-2,24,0] = 192  # spawn
+    game[5:-5,5:-5,0] = np.random.rand(40,40) > 0.95  # random blocks
     tiles[0,:,0] = 1  # top wall
     tiles[-1,:,0] = 1  # ground wall
     tiles[:,0,0] = 1  # left wall
     tiles[:,-1,0] = 1  # right wall
+    tiles[5:-5,5:-5,0] = game[5:-5,5:-5,0] * 16
 
     # generate the map file
-    create_map(game, [('generic_unhookable', tiles)], filename=filename)
+    create_map(game, [('grass_main', tiles)], filename=filename)
 
 
 

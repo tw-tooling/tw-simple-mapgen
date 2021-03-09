@@ -25,6 +25,7 @@ def create_spiral(filename=None):
     obstacle_freeze_probability = 0.8
 
     # create the map matrix
+    # 0: nothing, 1: normal, 3: unhookable, 33: start, 34: finish, 192: spwan
     size = np.array([basesize]*2)
     game = np.zeros((size[0],size[1],4), dtype='B')
 
@@ -46,13 +47,16 @@ def create_spiral(filename=None):
         nextdir = directions[direction + 1]
         a_ = a - nextdir - np.absolute(currdir)
         b_ = b - nextdir + np.absolute(currdir)
-        game[a_[0]:b_[0],a_[1]:b_[1],0] = 9  # outer freeze
+        game[a_[0]:b_[0],a_[1]:b_[1],0] = np.where(game[a_[0]:b_[0],a_[1]:b_[1],0] > 0, game[a_[0]:b_[0],a_[1]:b_[1],0], 9)  # outer freeze (dont overwrite obstacles)
         a_ = a + nextdir + np.absolute(currdir)
         b_ = b + nextdir - np.absolute(currdir)
         game[a_[0]:b_[0],a_[1]:b_[1],0] = np.where(game[a_[0]:b_[0],a_[1]:b_[1],0] > 0, game[a_[0]:b_[0],a_[1]:b_[1],0], 9)  # inner freeze (dont overwrite obstacles)
 
         # create wall
         game[a[0]:b[0],a[1]:b[1],0] = 1
+
+        # make wall thick
+        # TODO
 
         # create obstacles
         growlen = blocklen//2
@@ -77,9 +81,9 @@ def create_spiral(filename=None):
                     initial_grow_dir = directions[grow_direction]
                     pos += directions[grow_direction]
                     # grow obstacle
-                    while ((pos-start) * initial_grow_dir >= 0).all() and sum((pos-start)**2) < growlen**2:
+                    while ((pos-start+directions[grow_direction]) * initial_grow_dir >= 0).all() and sum((pos-start)**2) < growlen**2:  # stop when going too far or when hitting the wall
                         game[pos[0],pos[1],0] = 1  # grow obstacle block
-                        if putfreeze and ((pos-start+directions[grow_direction]) * initial_grow_dir >= 0).all():  # only put freeze when not inside the wall
+                        if putfreeze:
                             game[pos[0]-1:pos[0]+2,pos[1]-1:pos[1]+2] = np.where(game[pos[0]-1:pos[0]+2,pos[1]-1:pos[1]+2] > 0, game[pos[0]-1:pos[0]+2,pos[1]-1:pos[1]+2], 9)  # put freeze around block, without overwriting
                         grow_direction += np.random.choice([-1,0,1], 1, p=[obstacle_direction_change_probability/2,1-obstacle_direction_change_probability,obstacle_direction_change_probability/2])[0]  # select random new grow direction
                         pos += directions[grow_direction]
@@ -127,7 +131,7 @@ def create_spiral(filename=None):
     finish_line_end = finish_line_start + directions[direction]*blocklen
     a = np.array([min(finish_line_start[0], finish_line_end[0]),min(finish_line_start[1], finish_line_end[1])])
     b = np.array([max(finish_line_start[0], finish_line_end[0]),max(finish_line_start[1], finish_line_end[1])]) + 1
-    game[a[0]:b[0],a[1]:b[1],0] = np.where(game[a[0]:b[0],a[1]:b[1],0] == 1, 1, 34)  # create finish line without overwriting blocks
+    game[a[0]:b[0],a[1]:b[1],0] = np.where(np.isin(game[a[0]:b[0],a[1]:b[1],0], [1,3]), game[a[0]:b[0],a[1]:b[1],0], 34)  # create finish line without overwriting blocks
 
     # generate outer walls/nothing
     game[blocklen,:,0] = 0  # top wall
@@ -135,8 +139,17 @@ def create_spiral(filename=None):
     game[:,blocklen,0] = 0  # left wall
     game[:,-blocklen-1,0] = 0  # right wall
 
+    # generate visual tile layers
+    layer_unhookable = np.zeros(game.shape, dtype='B')
+    layer_unhookable[:,:,0] = np.array(np.where(game[:,:,0] == 3, 8, 0), dtype='B')  # walls
+    layer_desert = np.zeros(game.shape, dtype='B')
+    layer_desert[:,:,0] += np.array(np.where(game[:,:,0] == 1, np.random.choice(np.array([6,7,64,65], dtype='B'), game[:,:,0].shape), 0), dtype='B')  # obstacles
+    layer_desert[:,:,0] += np.array(np.where(game[:,:,0] == 9, 126, 0), dtype='B')  # freeze
+    layer_desert[:,:,0] += np.array(np.where(game[:,:,0] == 33, 94, 0), dtype='B')  # start line
+    layer_desert[:,:,0] += np.array(np.where(game[:,:,0] == 34, 94, 0), dtype='B')  # finish line
+
     # generate the map file
-    create_map(game, filename=filename)
+    create_map(game, [('generic_unhookable', layer_unhookable), ('desert_main', layer_desert)], filename=filename)
 
 
 

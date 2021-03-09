@@ -132,6 +132,7 @@ def read(filename, verbose=False):
         itemtypes = [tuple(readInt(f) for x in range(3)) for i in range(num_itemtypes)]  # (type, start, count)
         item_offsets = [readInt(f) for i in range(num_items)]
         # item_lengths = [b-a for a, b in zip(item_offsets, item_offsets[1:] + [item_area_size])]
+        if verbose: print(f'{itemtypes = }')
 
         # read compressed data info
         compressed_data_offsets = [readInt(f) for i in range(num_rawdata)]

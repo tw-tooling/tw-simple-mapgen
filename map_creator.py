@@ -3,6 +3,7 @@
 
 import sys, zlib
 import numpy as np
+from collections import defaultdict
 
 
 
@@ -34,11 +35,17 @@ def save_map(items, data, filename):
     # calculate itemtypes
     itemtypes = []
     items_considered_so_far = 0
-    for itemtype in range(7):  # TODO: check if 7 is the correct number of item types
-        count = len([x for x in items if x.type == itemtype])
-        if count > 0:
-            itemtypes.append((itemtype, items_considered_so_far, count))
+    itemtypes_dict = defaultdict(lambda:0)
+    for item in items:
+        itemtypes_dict[item.type] += 1
+    for i, count in sorted(itemtypes_dict.items()):
+        itemtypes.append((i, items_considered_so_far, count))
         items_considered_so_far += count
+    # for itemtype in range(7):  # TODO: check if 7 is the correct number of item types
+    #     count = len([x for x in items if x.type == itemtype])
+    #     if count > 0:
+    #         itemtypes.append((itemtype, items_considered_so_far, count))
+    #     items_considered_so_far += count
 
     # calculate header
     item_area_size = sum(len(x) for x in items)
@@ -90,12 +97,17 @@ def create_map(game_matrix, tile_layers=[], filename=None):
     # add start items
     items = [Item(0, 0, [1]), Item(0, 1, [1] + [0xffffffff]*5)]  # add a `version 1` item at the beginning and an info block after
 
+    # add image items
+    # version, width, height, external, name, data
+    for i, (imagename, matrix) in enumerate(tile_layers):
+        items += [Item(i, 2, [1, 1024, 1024, 1, i, 0xffffffff])]
+
     # add group items
     # version, offset_x, offset_y, parallax_x, parallax_y, startlayer, numlayers, use_clipping, clip_x, clip_y, clip_w, clip_h, name
     name_empty = [0x80808080, 0x80808080, 0x80808000]  # item name: nothing
     name_game = [3353472485, 0x80808080, 0x80808000]  # item name: 'Game', ...
     items += [
-        Item(0, 4, [3, 0, 0, 100, 100, 0, 1, 0, 0, 0, 0, 0] + name_game)
+        Item(0, 4, [3, 0, 0, 100, 100, 0, 1+len(tile_layers), 0, 0, 0, 0, 0] + name_game)
     ]
 
     # add layer items
@@ -104,20 +116,28 @@ def create_map(game_matrix, tile_layers=[], filename=None):
     # * quads: .., version, num_quads, data, image, name
     items += [
         # game layer
-        Item(0, 5, [0, 2, 0, 3, game_matrix.shape[0], game_matrix.shape[1], 1, 255, 255, 255, 255, 0xffffffff, 0, 0xffffffff, 0] + name_game + [0xffffffff]*5)
+        Item(0, 5, [0, 2, 0, 3, game_matrix.shape[0], game_matrix.shape[1], 1, 255, 255, 255, 255, 0xffffffff, 0, 0xffffffff, len(tile_layers)] + name_game + [0xffffffff]*5)
     ]
     for i, (imagename, matrix) in enumerate(tile_layers,1):
-        items += [Item(i, 5, [0, 2, 0, 3, matrix.shape[0], matrix.shape[1], 0, 255, 255, 255, 255, 0xffffffff, 0, 2*i-1, 2*i] + name_empty + [0xffffffff]*5)]
+        # tile layers
+        items += [Item(i, 5, [0, 2, 0, 3, matrix.shape[0], matrix.shape[1], 0, 255, 255, 255, 255, 0xffffffff, 0, i-1, len(tile_layers)+i] + name_empty + [0xffffffff]*5)]
 
     # add end item
-    #              [1041966870, 395065720, 2614735130, 3762359768]
-    # 65534 65535: [1041966870, 395065720, 2614735130, 3762359768]
     items += [Item(0, 6, [])]  # add an empty envpoint item at the end
 
+    # add ddnet special items
+    # items += [
+    #     Item(0, 0xfffe, [1, 0, 1, 0xffffffff, 0, 0]),
+    #     Item(0xfffe, 0xffff, [1041966870, 395065720, 2614735130, 3762359768])
+    # ]
+
     # add generated data
-    data = [game_matrix.tobytes()]
+    data = []
     for imagename, matrix in tile_layers:
-        data += [bytes(imagename+'\0','utf-8'), matrix.tobytes()]
+        data += [bytes(imagename+'\0','utf-8')]  # image names
+    data += [game_matrix.tobytes()]  # game layer
+    for imagename, matrix in tile_layers:
+        data += [matrix.tobytes()]  # tiles layers
 
     # create bytestream and save it as map file
     save_map(items, data, filename)
