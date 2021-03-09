@@ -77,11 +77,12 @@ def save_map(items, data, filename):
         result += x
 
     # write
+    filename = filename + '.map' if filename else 'newmap.map'
     with open(filename, 'wb') as f:
         f.write(result)
 
 
-def create_map(matrix, filename):
+def create_map(matrix, filename=None):
     '''create the map items and data from a given matrix'''
     # ids should probably be unique per type
     # items should be ordered by type

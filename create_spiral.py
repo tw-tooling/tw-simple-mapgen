@@ -3,6 +3,7 @@ from map_creator import create_map
 import sys
 
 
+
 class CycleArray:
     '''cyclic numpy array'''
     def __init__(self, *args):
@@ -14,7 +15,7 @@ class CycleArray:
 
 
 
-def create_spiral(filename):
+def create_spiral(filename=None):
     # config
     basesize = 200
     blocklen = 15
@@ -135,13 +136,13 @@ def create_spiral(filename):
     m[:,-blocklen-1,0] = 0  # right wall
 
     # generate the map file
-    create_map(m, filename)
+    create_map(m, filename=filename)
 
 
 
 # generate a map when the script is called from the command line
 if __name__ == "__main__":
-    filename = 'newmap.map'
     if len(sys.argv) > 1:
-        filename = sys.argv[1] + '.map'
-    create_spiral(filename)
+        create_spiral(sys.argv[1])
+    else:
+        create_spiral()
