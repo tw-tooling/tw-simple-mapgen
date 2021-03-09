@@ -5,6 +5,9 @@ def readInt(f):
     return int.from_bytes(f.read(4), byteorder='little')
 
 
+def intsToStr(arr):
+    return ''.join(chr(y-128) if y >= 128 else '\0' for x in arr for y in x.to_bytes(4, 'big'))
+
 
 class Item:
     def __init__(self, f):
@@ -92,6 +95,7 @@ class Item:
 #         self.height = readInt(f)
 #         self.flags = readInt(f)
 #         self.color = tuple(readInt(f) for i in range(4))  # rgba
+#         self.colorenv = readInt(f)
 #         self.colorenv_offset = readInt(f)
 #         self.image = readInt(f)
 #         self.data = readInt(f)
@@ -118,7 +122,7 @@ class Item:
 #         envpoint_values = tuple(readInt(f) for i in range(4))
 
 
-# ITEM_TYPES = [VersionItem, InfoItem ImageItem, EnvelopesItem, GroupItem, LayerItem, EnvpointItem, None, None]
+# ITEM_TYPES = [VersionItem, InfoItem, ImageItem, EnvelopesItem, GroupItem, LayerItem, EnvpointItem, None, None]
 
 
 def read(filename, verbose=False):
@@ -148,6 +152,12 @@ def read(filename, verbose=False):
             print('item types:')
             for i, typename in enumerate(['version', 'info', 'image', 'envelopes', 'group', 'layer', 'envpoint']):
                 print(f'{len([x for x in items if x.type == i]):4d} {typename}')
+            print('items:')
+            for item in items:
+                print(f'{item.id:3d} {item.type}: {item.data}')
+            print(f'data ({data_area_size} / {sum(uncompressed_data_lengths)}):')
+            for x in data:
+                print(f'{len(x):3d} - {x[:30]} ...')
 
         return items, data
 
