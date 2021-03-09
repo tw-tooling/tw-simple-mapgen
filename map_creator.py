@@ -82,7 +82,7 @@ def save_map(items, data, filename):
         f.write(result)
 
 
-def create_map(matrix, filename=None):
+def create_map(game_matrix, tile_layers=[], filename=None):
     '''create the map items and data from a given matrix'''
     # ids should probably be unique per type
     # items should be ordered by type
@@ -92,7 +92,7 @@ def create_map(matrix, filename=None):
 
     # add group items
     # version, offset_x, offset_y, parallax_x, parallax_y, startlayer, numlayers, use_clipping, clip_x, clip_y, clip_w, clip_h, name
-    # name_empty = [0x80808080, 0x80808080, 0x80808000]  # item name: nothing
+    name_empty = [0x80808080, 0x80808080, 0x80808000]  # item name: nothing
     name_game = [3353472485, 0x80808080, 0x80808000]  # item name: 'Game', ...
     items += [
         Item(0, 4, [3, 0, 0, 100, 100, 0, 1, 0, 0, 0, 0, 0] + name_game)
@@ -100,18 +100,22 @@ def create_map(matrix, filename=None):
 
     # add layer items
     # version, type (invalid, game, tiles, quads), flags, ...
-    # * tiles: ..., version, width, height, type, color (rgba), colorenv, colorenv_offset, image, data, name
+    # * tiles: ..., version, width, height, flags (Tiles,Game,Tele,Speedup,Front,Switch,Tune), color [r,g,b,a], colorenv, colorenv_offset, image, data, name
     # * quads: .., version, num_quads, data, image, name
     items += [
         # game layer
-        Item(0, 5, [0,2,0, 3, matrix.shape[0], matrix.shape[1], 1, 0xff,0xff,0xff,0xff, 0xffffffff, 0, 0xffffffff, 0] + name_game + [0xffffffff]*5)
+        Item(0, 5, [0, 2, 0, 3, game_matrix.shape[0], game_matrix.shape[1], 1, 255, 255, 255, 255, 0xffffffff, 0, 0xffffffff, 0] + name_game + [0xffffffff]*5)
     ]
+    for i, (imagename, matrix) in enumerate(tile_layers,1):
+        items += [Item(i, 5, [0, 2, 0, 3, matrix.shape[0], matrix.shape[1], 0, 255, 255, 255, 255, 0xffffffff, 0, 2*i-1, 2*i] + name_empty + [0xffffffff]*5)]
 
     # add end item
     items += [Item(0, 6, [])]  # add an empty envpoint item at the end
 
     # add generated data
-    data = [matrix.tobytes()]
+    data = [game_matrix.tobytes()]
+    for imagename, matrix in tile_layers:
+        data += [bytes(imagename,'utf-8'), matrix.tobytes()]
 
     # create bytestream and save it as map file
     save_map(items, data, filename)

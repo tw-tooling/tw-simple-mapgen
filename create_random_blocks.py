@@ -6,18 +6,18 @@ import sys
 
 def create_random_blocks(filename=None):
     # create the map matrix
-    m = np.zeros((200,200,4), dtype='B')
+    game = np.zeros((200,200,4), dtype='B')
 
     # add content
-    m[0,:,0] = 1  # top wall
-    m[-1,:,0] = 1  # ground wall
-    m[:,0,0] = 1  # left wall
-    m[:,-1,0] = 1  # right wall
-    m[-2,99,0] = 192  # spawn
-    m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95  # random blocks
+    game[0,:,0] = 1  # top wall
+    game[-1,:,0] = 1  # ground wall
+    game[:,0,0] = 1  # left wall
+    game[:,-1,0] = 1  # right wall
+    game[-2,99,0] = 192  # spawn
+    game[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95  # random blocks
 
     # generate the map file
-    create_map(m, filename=filename)
+    create_map(game, filename=filename)
 
 
 
