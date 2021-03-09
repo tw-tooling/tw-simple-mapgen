@@ -20,6 +20,7 @@ class Item:
 
 
 def save_map(items, data):
+    '''generate a byte sequence from items and data, add required info and save it'''
     # compress data
     compressed_data = [zlib.compress(x) for x in data]
 
@@ -75,36 +76,42 @@ def save_map(items, data):
 
 
 def create_map(matrix):
+    '''create the map items and data from a given matrix'''
     # ids should probably be unique per type
     # items should be ordered by type
-    # layers: version, type (invalid, game, tiles, quads), flags, version, ...
 
+    # add start items
     items = [Item(0, 0, [1]), Item(0, 1, [1] + [0xffffffff]*5)]  # add a `version 1` item at the beginning and an info block after
 
-    # name_empty = [0x80808080, 0x80808080, 0x80808000]
-    name_game = [3353472485, 0x80808080, 0x80808000]  # 'Game', ...
     # add group items
     # version, offset_x, offset_y, parallax_x, parallax_y, startlayer, numlayers, use_clipping, clip_x, clip_y, clip_w, clip_h, name
+    # name_empty = [0x80808080, 0x80808080, 0x80808000]  # item name: nothing
+    name_game = [3353472485, 0x80808080, 0x80808000]  # item name: 'Game', ...
     items += [
         Item(0, 4, [3, 0, 0, 100, 100, 0, 1, 0, 0, 0, 0, 0] + name_game)
     ]
+
     # add layer items
     # version, type (invalid, game, tiles, quads), flags, ...
-    # tiles: version, width, height, type, color (rgba), colorenv, colorenv_offset, image, data, name
-    # quads: version, num_quads, data, image, name
+    # * tiles: ..., version, width, height, type, color (rgba), colorenv, colorenv_offset, image, data, name
+    # * quads: .., version, num_quads, data, image, name
     items += [
+        # game layer
         Item(0, 5, [0,2,0, 3, matrix.shape[0], matrix.shape[1], 1, 0xff,0xff,0xff,0xff, 0xffffffff, 0, 0xffffffff, 0] + name_game + [0xffffffff]*5)
     ]
 
+    # add end item
     items += [Item(0, 6, [])]  # add an empty envpoint item at the end
 
-    # generated data
+    # add generated data
     data = [matrix.tobytes()]
 
+    # create bytestream and save it as map file
     save_map(items, data)
 
 
 def generate_map():
+    '''generate a matrix which represents the map'''
     m = np.zeros((200,200,4), dtype='B')
     m[0,:,0] = 1  # top wall
     m[-1,:,0] = 1  # ground wall
