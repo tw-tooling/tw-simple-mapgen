@@ -40,7 +40,7 @@ def save_map(items, data):
     # calculate itemtypes
     itemtypes = []
     items_considered_so_far = 0
-    for itemtype in range(7):  # TODO: check if 7 is correct
+    for itemtype in range(7):  # TODO: check if 7 is the correct number of item types
         count = len([x for x in items if x.type == itemtype])
         if count > 0:
             itemtypes.append((itemtype, items_considered_so_far, count))
@@ -56,30 +56,30 @@ def save_map(items, data):
 
     # create byte result
     result = b'DATA'
-    # header
+    # add header
     for x in header:
         result += toByte(x)
-    # itemtypes info
+    # add itemtypes info
     for x in itemtypes:
         for y in x:
             result += toByte(y)
-    # item offsets
+    # add item offsets
     curr_offset = 0
     for x in items:
         result += toByte(curr_offset)
         curr_offset += len(x)
-    # compressed data offsets
+    # add compressed data offsets
     curr_offset = 0
     for x in compressed_data:
         result += toByte(curr_offset)
         curr_offset += len(x)
-    # uncompressed data lengths
+    # add uncompressed data lengths
     for x in data:
         result += toByte(len(x))
-    # items
+    # add items
     for item in items:
         result += item.toByte()
-    # compressed data
+    # add compressed data
     for x in compressed_data:
         result += x
 
@@ -125,15 +125,22 @@ def create_map(matrix):
 
 def generate_map():
     '''generate a matrix which represents the map'''
+    # create the map matrix
     m = np.zeros((200,200,4), dtype='B')
+
+    # add content
     m[0,:,0] = 1  # top wall
     m[-1,:,0] = 1  # ground wall
     m[:,0,0] = 1  # left wall
     m[:,-1,0] = 1  # right wall
     m[-2,99,0] = 192  # spawn
     m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95
+
+    # generate the map file
     create_map(m)
 
 
+
+# generate a map when the script is called from the command line
 if __name__ == "__main__":
     generate_map()
