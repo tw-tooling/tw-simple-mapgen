@@ -20,8 +20,8 @@ def create_spiral(filename=None):
     blocklen = 20
     min_wall_thickness = 1  # on each side
     max_wall_thickness = 4  # on each side
-    wall_thickness_change_probability = 0.1
-    obstacle_size = 15
+    wall_thickness_change_probability = 0.15
+    obstacle_size = 5
     obstacle_side_switch_probability = 0.8
     obstacle_direction_change_probability = 0.4
     obstacle_freeze_probability = 0.5
@@ -39,8 +39,8 @@ def create_spiral(filename=None):
     pos += sidelen * blocklen // 2  # start with a bit offset from center
     newpos = pos + directions[direction] * sidelen * blocklen
     hellofromtheotherside = False  # side to grow obstacles from
-    inner_thickness = 3  # TODO: random
-    outer_thickness = 3
+    inner_thickness = 1
+    outer_thickness = 1
     while 0 <= newpos[0]+blocklen*2 <= size[0] and 0 <= newpos[1]+blocklen*2 <= size[1]:
         # directions
         currdir = directions[direction]
