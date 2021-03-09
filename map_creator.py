@@ -45,7 +45,6 @@ def save_map(items, data, filename):
     data_area_size = sum(len(x) for x in compressed_data)
     swaplen =  36 - 16 + 12*len(itemtypes) + 4*len(items) + 2*4*len(data) + item_area_size  # size before data (-16, because it starts after `swaplen`)
     size = swaplen + data_area_size  # size of everything after `swaplen`
-    swaplen = 328  # this is just a value used by another map; TODO: fix
     header = [4, size, swaplen, len(itemtypes), len(items), len(data), item_area_size, data_area_size]
 
     # create byte result

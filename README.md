@@ -7,12 +7,12 @@ All results are saved to the current working directory.
 
 ## create map
 
-Generate a teeworlds map:
+Generate a teeworlds map (the filename argument is optional):
 
-    python create_random_blocks.py
-    python create_spiral.py
+    python create_random_blocks.py [FILENAME]
+    python create_spiral.py [FILENAME]
 
-Those scripts utilize `create_map.py` to build and save the map file
+Those scripts utilize `create_map.py` to build and save the map file. The map is saved as `FILENAME.map`, with the default FILENAME being `newmap`.
 
 
 ## save images
