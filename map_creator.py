@@ -5,6 +5,7 @@
 # * ddnet map documentation: https://ddnet.tw/libtw2-doc/map/
 # * teeworlds mapitem source: https://github.com/teeworlds/teeworlds/blob/master/src/game/mapitems.h
 # * twl datafile items source: https://github.com/Malekblubb/twl/blob/master/include/twl/files/map/map_datafile_items.hpp
+# * libtw2 datafile documentation: https://github.com/heinrich5991/libtw2/blob/master/doc/datafile.md
 
 
 import sys, zlib
@@ -49,8 +50,8 @@ def save_map(items, data):
     # calculate header
     item_area_size = sum(len(x) for x in items)
     data_area_size = sum(len(x) for x in compressed_data)
-    # calculate the size by adding everything up (dont know why -16, maybe because not everything of the header is counted)
-    size = 36 - 16 + 12*len(itemtypes) + 4*len(items) + 2*4*len(data) + item_area_size + data_area_size
+    swaplen =  36 - 16 + 12*len(itemtypes) + 4*len(items) + 2*4*len(data) + item_area_size  # size before data (-16, because it starts after `swaplen`)
+    size = swaplen + data_area_size  # size of everything after `swaplen`
     swaplen = 328  # this is just a value used by another map; TODO: fix
     header = [4, size, swaplen, len(itemtypes), len(items), len(data), item_area_size, data_area_size]
 
@@ -129,12 +130,32 @@ def generate_map():
     m = np.zeros((200,200,4), dtype='B')
 
     # add content
-    m[0,:,0] = 1  # top wall
-    m[-1,:,0] = 1  # ground wall
-    m[:,0,0] = 1  # left wall
-    m[:,-1,0] = 1  # right wall
-    m[-2,99,0] = 192  # spawn
-    m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95
+    # # m[0,:,0] = 1  # top wall
+    # # m[-1,:,0] = 1  # ground wall
+    # # m[:,0,0] = 1  # left wall
+    # # m[:,-1,0] = 1  # right wall
+    # # m[-2,99,0] = 192  # spawn
+    # m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95
+
+    sidelen = 1
+    blocklen = 12
+    pos = np.array([99,99])
+    m[pos[0],pos[1]] = 192  # create spawn
+    direction = 0
+    directions = np.array([(0,-1),(-1,0),(0,1),(1,0)])
+    pos += sidelen * blocklen // 2
+    newpos = pos + directions[direction] * sidelen * blocklen
+    while 0 <= newpos[0] <= m.shape[0] and 0 <= newpos[1] <= m.shape[1]:
+        xa = min(pos[0], newpos[0])
+        xb = max(pos[0], newpos[0])
+        ya = min(pos[1], newpos[1])
+        yb = max(pos[1], newpos[1])
+        m[xa:xb+1,ya:yb+1,0] = 1  # create wall
+        direction = (direction + 1) % len(directions)
+        if direction in [0,2]:
+            sidelen += 1
+        pos = newpos
+        newpos = pos + directions[direction] * sidelen * blocklen
 
     # generate the map file
     create_map(m)
