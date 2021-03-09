@@ -1,21 +1,34 @@
+# generate a teeworlds/ddnet map
+
+# helpful documentation:
+# * german map explanation: https://teeworlds-friends.de/thread/7563-roh-aufbau-einer-teeworlds-map/
+# * ddnet map documentation: https://ddnet.tw/libtw2-doc/map/
+# * teeworlds mapitem source: https://github.com/teeworlds/teeworlds/blob/master/src/game/mapitems.h
+# * twl datafile items source: https://github.com/Malekblubb/twl/blob/master/include/twl/files/map/map_datafile_items.hpp
+
+
 import sys, zlib
 import numpy as np
 
 
+
 def toByte(x):
+    '''convert an int to bytes'''
     return x.to_bytes(4, 'little')
 
 
 class Item:
     def __init__(self, id, type, data):
         self.id = id
-        self.type = type
-        self.data = data
+        self.type = type  # can one of: Version, Info, Image, Envelopes, Group, Layer, Envpoint, ...
+        self.data = data  # structure depends on type
     
     def __len__(self):
+        '''return the length if converted to bytes'''
         return (len(self.data) + 2) * 4
 
     def toByte(self):
+        '''converte to bytestring'''
         return toByte(self.type << 16 + self.id) + toByte(len(self.data) * 4) + b''.join(toByte(x) for x in self.data)
 
 
