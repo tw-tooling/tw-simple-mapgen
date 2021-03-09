@@ -23,7 +23,7 @@ class Item:
 
     def toByte(self):
         '''converte to bytestring'''
-        return toByte(self.type << 16 + self.id) + toByte(len(self.data) * 4) + b''.join(toByte(x) for x in self.data)
+        return toByte((self.type << 16) + self.id) + toByte(len(self.data) * 4) + b''.join(toByte(x) for x in self.data)
 
 
 def save_map(items, data, filename):
@@ -110,12 +110,14 @@ def create_map(game_matrix, tile_layers=[], filename=None):
         items += [Item(i, 5, [0, 2, 0, 3, matrix.shape[0], matrix.shape[1], 0, 255, 255, 255, 255, 0xffffffff, 0, 2*i-1, 2*i] + name_empty + [0xffffffff]*5)]
 
     # add end item
+    #              [1041966870, 395065720, 2614735130, 3762359768]
+    # 65534 65535: [1041966870, 395065720, 2614735130, 3762359768]
     items += [Item(0, 6, [])]  # add an empty envpoint item at the end
 
     # add generated data
     data = [game_matrix.tobytes()]
     for imagename, matrix in tile_layers:
-        data += [bytes(imagename,'utf-8'), matrix.tobytes()]
+        data += [bytes(imagename+'\0','utf-8'), matrix.tobytes()]
 
     # create bytestream and save it as map file
     save_map(items, data, filename)
