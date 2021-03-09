@@ -124,19 +124,30 @@ def create_map(matrix):
     save_map(items, data)
 
 
-def generate_map():
-    '''generate a matrix which represents the map'''
+# --------------------------------------------- map content creation below ---------------------------------------------
+
+
+def generate_random_blocks():
     # create the map matrix
     m = np.zeros((200,200,4), dtype='B')
 
     # add content
-    # # m[0,:,0] = 1  # top wall
-    # # m[-1,:,0] = 1  # ground wall
-    # # m[:,0,0] = 1  # left wall
-    # # m[:,-1,0] = 1  # right wall
-    # # m[-2,99,0] = 192  # spawn
-    # m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95
+    m[0,:,0] = 1  # top wall
+    m[-1,:,0] = 1  # ground wall
+    m[:,0,0] = 1  # left wall
+    m[:,-1,0] = 1  # right wall
+    m[-2,99,0] = 192  # spawn
+    m[5:-5,5:-5,0] = np.random.rand(190,190) > 0.95  # random blocks
 
+    # generate the map file
+    create_map(m)
+
+
+def generate_spiral():
+    # create the map matrix
+    m = np.zeros((200,200,4), dtype='B')
+
+    # add content
     sidelen = 1
     blocklen = 12
     pos = np.array([99,99])
@@ -164,4 +175,4 @@ def generate_map():
 
 # generate a map when the script is called from the command line
 if __name__ == "__main__":
-    generate_map()
+    generate_spiral()
