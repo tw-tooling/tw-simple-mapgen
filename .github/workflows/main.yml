@@ -14,6 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install xmllint
+      run: sudo apt install python3-tk
+
     - name: Package Application Windows
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
