@@ -1,11 +1,11 @@
-from create_layered import create_layered
+from create_layered import create_layered, CycleArray
 
 
 
 create_layered(
     filename=None,
     # config
-    basesize = 200,
+    basesize = 300,
     blocklen = 20,
     growlen = 11,  # has be be less than sqrt(0.5) * blocklen - 2
     min_wall_thickness = 1,  # on each side
@@ -19,5 +19,5 @@ create_layered(
     block_corner = 1,
     block_obstacle = 1,
     block_freeze = 9,
-    directions = [2,2,2,3,3,3,2,1,1,1,2,2,2,2]  # directions to build along
+    directions = [2,2,2,3,3,3,2,1,1,1,2,2,3,3,3,2,1,1,1,2,2,2,2]  # directions to build along
 )

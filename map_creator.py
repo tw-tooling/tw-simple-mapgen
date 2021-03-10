@@ -84,7 +84,7 @@ def save_map(items, data, filename):
         result += x
 
     # write
-    filename = filename + '.map' if filename else 'newmap.map'
+    filename = filename if filename else 'newmap.map'
     with open(filename, 'wb') as f:
         f.write(result)
 
