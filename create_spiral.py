@@ -74,7 +74,7 @@ def create_spiral(filename=None):
                 tmpx = x-outer_thickness*nextdir[0]
                 tmpy = y-outer_thickness*nextdir[1]
                 tmp = game[tmpx-1:tmpx+2,tmpy-1:tmpy+2]
-                game[tmpx-1:tmpx+2,tmpy-1:tmpy+2] = np.where(tmp > 0, tmp, 9)  # put inner freeze around block, without overwriting
+                game[tmpx-1:tmpx+2,tmpy-1:tmpy+2] = np.where(tmp > 0, tmp, 9)  # put outer freeze around block, without overwriting
                 # set next thickness
                 p = wall_thickness_change_probability
                 inner_thickness += np.random.choice([-1,0,1], 1, p=[p/2,1-p,p/2])[0]
@@ -88,7 +88,7 @@ def create_spiral(filename=None):
             end = newpos - nextdir * i + currdir * (outer_thickness-i)
             game[min(start[0],end[0]):max(start[0],end[0])+1, min(start[1],end[1]):max(start[1],end[1])+1, 0] = 1  # outer corners
             tmp = game[end[0]-1:end[0]+2,end[1]-1:end[1]+2]
-            game[end[0]-1:end[0]+2,end[1]-1:end[1]+2] = np.where(tmp > 0, tmp, 9)  # put inner freeze around block, without overwriting
+            game[end[0]-1:end[0]+2,end[1]-1:end[1]+2] = np.where(tmp > 0, tmp, 9)  # put outer freeze around block, without overwriting
 
         # create obstacles
         growlen = int(blocklen*0.6)  # has be be less than sqrt(0.5) ~= 0,7
@@ -167,7 +167,7 @@ def create_spiral(filename=None):
                 tmpx = x-outer_thickness*nextdir[0]
                 tmpy = y-outer_thickness*nextdir[1]
                 tmp = game[tmpx-1:tmpx+2,tmpy-1:tmpy+2]
-                game[tmpx-1:tmpx+2,tmpy-1:tmpy+2] = np.where(tmp > 0, tmp, 9)  # put inner freeze around block, without overwriting
+                game[tmpx-1:tmpx+2,tmpy-1:tmpy+2] = np.where(tmp > 0, tmp, 9)  # put outer freeze around block, without overwriting
                 # set next thickness
                 p = wall_thickness_change_probability
                 inner_thickness += np.random.choice([-1,0,1], 1, p=[p/2,1-p,p/2])[0]
@@ -181,7 +181,7 @@ def create_spiral(filename=None):
             end = newpos - nextdir * i + currdir * (outer_thickness-i)
             game[min(start[0],end[0]):max(start[0],end[0])+1, min(start[1],end[1]):max(start[1],end[1])+1, 0] = 1  # outer corners
             tmp = game[end[0]-1:end[0]+2,end[1]-1:end[1]+2]
-            game[end[0]-1:end[0]+2,end[1]-1:end[1]+2] = np.where(tmp > 0, tmp, 9)  # put inner freeze around block, without overwriting
+            game[end[0]-1:end[0]+2,end[1]-1:end[1]+2] = np.where(tmp > 0, tmp, 9)  # put outer freeze around block, without overwriting
 
         # update variables for next run
         direction = (direction + 1) % len(directions)  # `%` is only needed to keep the variable small for performance reasons
