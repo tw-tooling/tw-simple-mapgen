@@ -17,7 +17,7 @@ jobs:
     - name: Package Application Windows
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: automapper.py
+        path: ''
 
     - name: Package Application Linux
       uses: JackMcKew/pyinstaller-action-linux@main
@@ -26,5 +26,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: tw-automapper
+        name: automapper
         path: src/dist/windows
