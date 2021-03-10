@@ -2,7 +2,7 @@
 
 python scripts for teeworlds.
 
-You can download the map generator application for windows [here](TODO) (no installation required).
+You can download the map generator application for windows [here](https://github.com/JonasLoos/tw-utils/releases/download/v0.1/tw-mapgen-windows.exe) (no installation required).
 
 The scripts require Python 3.
 All results are saved to the current working directory if no other path is specified.
