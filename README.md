@@ -9,8 +9,14 @@ All results are saved to the current working directory.
 
 Generate a teeworlds map (the filename argument is optional):
 
+```sh
     python create_random_blocks.py [FILENAME]
     python create_spiral.py [FILENAME]
+    python create_layered.py [FILENAME]
+
+    # if you want to set custom directions and config, change `create_something.py` and run
+    python create_something.py
+```
 
 Those scripts utilize `create_map.py` to build and save the map file. The map is saved as `FILENAME.map`, with the default FILENAME being `newmap`.
 

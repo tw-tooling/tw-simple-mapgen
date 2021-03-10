@@ -9,9 +9,9 @@ class CycleArray:
     def __init__(self, *args):
         self.arr = np.array(*args)
     def __getitem__(self, i):
-        return self.arr[i % len(self)]
+        return self.arr[i % len(self.arr)]
     def __len__(self):
-        return len(self.arr)
+        return 2*30  # some very high number
 
 
 def create_layered(
@@ -44,9 +44,7 @@ def create_layered(
     start_pos = np.array([blocklen,blocklen])
     pos = start_pos
     direction_i = 0
-    # rotations = CycleArray([(-1,0),(0,-1),(1,0),(0,1)])  # directions for rotations purposes
     rotations = CycleArray([(0,-1),(-1,0),(0,1),(1,0)])  # directions for rotations purposes
-    # directions = CycleArray([2,2,2,3,3])  # directions to build along
     newpos = pos + rotations[directions[direction_i]] * blocklen
     hellofromtheotherside = False  # side to grow obstacles from
     left_thickness = 1
@@ -66,8 +64,8 @@ def create_layered(
     yb = max(p1[1],p2[1],p3[1],p4[1])
     game[xa:xb,ya:yb,0] = 0
 
-    # place one part of the way at a time
-    while 0 <= newpos[0]+blocklen <= size[0] and 0 <= newpos[1]+blocklen <= size[1]:
+    # place one part of the way at a time until the border is reached or no directions are given
+    while 0 <= newpos[0]+blocklen <= size[0] and 0 <= newpos[1]+blocklen <= size[1] and direction_i + 1 < len(directions):
         # directions
         forward = rotations[directions[direction_i]]
         left = rotations[directions[direction_i] - 1]
@@ -108,7 +106,7 @@ def create_layered(
         for x in list(range(a[0], b[0], 1))[::forward[0] or 1]:
             for y in list(range(a[1], b[1], 1))[::forward[1] or 1]:
                 # set blocks
-                # left
+                # left side
                 if i >= left_start and i <= left_end:
                     x_ = x + left[0] * blocklen // 2
                     y_ = y + left[1] * blocklen // 2
@@ -126,6 +124,7 @@ def create_layered(
                     left_thickness += np.random.choice([-1,0,1], 1, p=[p/2,1-p,p/2])[0]
                     if left_thickness > max_wall_thickness: left_thickness = max_wall_thickness
                     elif left_thickness < min_wall_thickness: left_thickness = min_wall_thickness
+                # right side
                 if i >= right_start and i <= right_end:
                     x_ = x + right[0] * blocklen // 2
                     y_ = y + right[1] * blocklen // 2
@@ -192,7 +191,6 @@ def create_layered(
 
         # update variables for next run
         direction_i += 1
-        direction_i %= len(directions)  # `%` is only needed to keey the variable small for performance reasons
         pos = newpos
         newpos = pos + rotations[directions[direction_i]] * blocklen
 
@@ -256,6 +254,6 @@ def create_layered(
 # generate a map when the script is called from the command line
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        create_layered(sys.argv[1])
+        create_layered(filename=sys.argv[1])
     else:
         create_layered()
