@@ -14,8 +14,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install xmllint
-      run: sudo apt install python3-tk
+    - name: Install tk, upx
+      run: sudo apt install -y python3-tk upx
 
     - name: Package Application Windows
       uses: JackMcKew/pyinstaller-action-windows@main
@@ -27,25 +27,25 @@ jobs:
       with:
         path: src
 
-    - name: copy windows executables
-      run: cp src/dist/windows/automapper.exe tw-automapper-windows.exe
+    # - name: copy windows executables
+    #   run: cp src/dist/windows/automapper.exe tw-automapper-windows.exe
 
-    - name: copy linux executables
-      run: cp src/dist/linux/automapper tw-automapper-linux
+    # - name: copy linux executables
+    #   run: cp src/dist/linux/automapper tw-automapper-linux
 
-    - name: Commit executables
-        uses: EndBug/add-and-commit@v7
-        with:
-          add: '["tw-automapper-windows.exe","tw-automapper-linux"]'
-          author_name: "Github Action"
-          message: 'update executables'
-
-    # - uses: actions/upload-artifact@v2
+    # - name: Commit executables
+    #   uses: EndBug/add-and-commit@v7
     #   with:
-    #     name: tw-automapper-windows.exe
-    #     path: src/dist/windows/automapper.exe
+    #     add: '["tw-automapper-windows.exe","tw-automapper-linux"]'
+    #     author_name: "Github Action"
+    #     message: 'update executables'
 
-    # - uses: actions/upload-artifact@v2
-    #   with:
-    #     name: tw-automapper-linux
-    #     path: src/dist/linux/automapper
+    - uses: actions/upload-artifact@v2
+      with:
+        name: tw-automapper-windows.exe
+        path: src/dist/windows/automapper.exe
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: tw-automapper-linux
+        path: src/dist/linux/automapper
