@@ -29,8 +29,8 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: tw-automapper-windows
-        path: src/dist/windows/automapper
+        name: tw-automapper-windows.exe
+        path: src/dist/windows/automapper.exe
 
     - uses: actions/upload-artifact@v2
       with:
