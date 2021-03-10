@@ -27,12 +27,25 @@ jobs:
       with:
         path: src
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: tw-automapper-windows.exe
-        path: src/dist/windows/automapper.exe
+    - name: copy windows executables
+      run: cp src/dist/windows/automapper.exe tw-automapper-windows.exe
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: tw-automapper-linux
-        path: src/dist/linux/automapper
+    - name: copy linux executables
+      run: cp src/dist/linux/automapper tw-automapper-linux
+
+    - name: Commit executables
+        uses: EndBug/add-and-commit@v7
+        with:
+          add: '["tw-automapper-windows.exe","tw-automapper-linux"]'
+          author_name: "Github Action"
+          message: 'update executables'
+
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: tw-automapper-windows.exe
+    #     path: src/dist/windows/automapper.exe
+
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: tw-automapper-linux
+    #     path: src/dist/linux/automapper
