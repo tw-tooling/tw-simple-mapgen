@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['automapper.py'],
+a = Analysis(['tw-mapgen.py'],
              pathex=['/home/jonas/code/teeworlds stuff'],
              binaries=[],
              datas=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='automapper',
+          name='tw-mapgen',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

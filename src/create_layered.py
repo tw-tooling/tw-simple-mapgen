@@ -19,10 +19,10 @@ def create_layered(
         # config
         basesize = 200,
         blocklen = 20,
-        growlen = 11,  # has be be less than sqrt(0.5) * blocklen - 2
         min_wall_thickness = 1,  # on each side
         max_wall_thickness = 5 , # on each side
         wall_thickness_change_probability = 0.15,
+        obstacle_growlen = 11,  # has be be less than sqrt(0.5) * blocklen - 2
         obstacle_size = 5,
         obstacle_side_switch_probability = 0.8,
         obstacle_direction_change_probability = 0.4,
@@ -179,7 +179,7 @@ def create_layered(
                 initial_grow_dir = rotations[grow_direction]
                 o_pos += rotations[grow_direction]
                 # grow obstacle
-                while sum((o_pos-start)**2) < growlen**2 and ((o_pos-start+rotations[grow_direction]) * initial_grow_dir >= 0).all():  # stop when going too far or when hitting a wall
+                while sum((o_pos-start)**2) < obstacle_growlen**2 and ((o_pos-start+rotations[grow_direction]) * initial_grow_dir >= 0).all():  # stop when going too far or when hitting a wall
                     game[o_pos[0],o_pos[1],0] = block_obstacle  # grow obstacle block
                     if putfreeze:
                         tmp = game[o_pos[0]-1:o_pos[0]+2,o_pos[1]-1:o_pos[1]+2]

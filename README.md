@@ -1,12 +1,17 @@
 # tw-utils
 
-python scripts for teeworlds (requires python 3)
+python scripts for teeworlds.
 
-All results are saved to the current working directory.
+You can download the map generator application for windows [here](TODO) (no installation required).
 
-## start gui
+The scripts require Python 3.
+All results are saved to the current working directory if no other path is specified.
+
+
+## start gui (from source)
 
     python automapper.py
+
 
 ## create map
 
@@ -21,19 +26,19 @@ Generate a teeworlds map (the filename argument is optional):
     python create_something.py
 ```
 
-Those scripts utilize `create_map.py` to build and save the map file. The map is saved as `FILENAME.map`, with the default FILENAME being `newmap`.
+Those scripts utilize `create_map.py` to build and save the map file. The map is saved as `FILENAME`, with the default FILENAME being `newmap.map`.
 
 
 ## save images
 
-Extract all images saved in a teeworlds map (doesn't include referenced external images):
+Extract all images saved in a teeworlds map to the working directory (doesn't include referenced external images):
 
     python save_images.py PATH_TO_MAP
 
 
-## generate application with pyinstaller
+## generate gui application with pyinstaller
 
-    pyinstaller automapper.py --onefile
+    pyinstaller tw-mapgen.py --onefile
 
 
 ## helpful teeworlds map-/datafile documentation:

@@ -22,30 +22,30 @@ jobs:
       with:
         path: src
 
-    - name: Package Application Linux
-      uses: JackMcKew/pyinstaller-action-linux@main
-      with:
-        path: src
+    # - name: Package Application Linux
+    #   uses: JackMcKew/pyinstaller-action-linux@main
+    #   with:
+    #     path: src
 
     # - name: copy windows executables
-    #   run: cp src/dist/windows/automapper.exe tw-automapper-windows.exe
+    #   run: cp src/dist/windows/tw-mapgen.exe tw-mapgen-windows.exe
 
     # - name: copy linux executables
-    #   run: cp src/dist/linux/automapper tw-automapper-linux
+    #   run: cp src/dist/linux/tw-mapgen tw-mapgen-linux
 
     # - name: Commit executables
     #   uses: EndBug/add-and-commit@v7
     #   with:
-    #     add: '["tw-automapper-windows.exe","tw-automapper-linux"]'
+    #     add: '["tw-mapgen-windows.exe","tw-mapgen-linux"]'
     #     author_name: "Github Action"
     #     message: 'update executables'
 
     - uses: actions/upload-artifact@v2
       with:
-        name: tw-automapper-windows.exe
-        path: src/dist/windows/automapper.exe
+        name: tw-mapgen-windows.exe
+        path: src/dist/windows/tw-mapgen.exe
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: tw-automapper-linux
-        path: src/dist/linux/automapper
+    # - uses: actions/upload-artifact@v2
+    #   with:
+    #     name: tw-mapgen-linux
+    #     path: src/dist/linux/tw-mapgen

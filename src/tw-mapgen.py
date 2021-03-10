@@ -5,28 +5,28 @@ from pathlib import Path
 
 config = [
     ('filename', str(Path.cwd().joinpath('newmap.map')), str),
-    ('basesize', '300', int),
-    ('blocklen', '20', int),
-    ('growlen', '11', int),  # has be be less than sqrt(0.5) * blocklen - 2
-    ('min wall thickness', '1', int),  # on each si'de
-    ('max wall thickness', '5', int), # on each si'de
+    ('base map size', '300', int),
+    ('block length (max tunnel size)', '20', int),
+    ('min wall thickness (per side)', '1', int),  # on each side
+    ('max wall thickness (per side)', '5', int), # on each side
     ('wall thickness change probability', '0.15', float),
+    ('obstacle grow length', '11', int),  # has be be less than sqrt(0.5) * blocklen - 2
     ('obstacle size', '5', int),
     ('obstacle side switch probability', '0.8', float),
     ('obstacle direction change probability', '0.4', float),
-    ('obstacle freeze probability', '1', float),
-    ('block wall', '1', int),
-    ('block corner', '1', int),
-    ('block obstacle', '1', int),
-    ('block freeze', '9', int),
-    ('directions', '2,2,2,3,3,3,2,1,1,1,2,2,3,3,3,2,1,1,1,2,2,2,2', lambda x: list(map(int,x.split(','))))  # directions to build along
+    ('obstacle freeze probability', '0.8', float),
+    ('block wall (game layer)', '1', int),
+    ('block corner (game layer)', '1', int),
+    ('block obstacle (game layer)', '1', int),
+    ('block freeze (game layer)', '9', int),
+    ('directions (0:left, 1:up, 2:right, 3:down)', '2,2,2,3,3,3,2,1,1,1,2,2,3,3,3,2,1,1,1,2,2,2,2', lambda x: list(map(int,x.split(',')) if x.strip() else None))  # directions to build along
 ]
 
 
 # window
 window = tk.Tk()
-window.title('Teeworlds automapper')
-# window.geometry("1400x1200")  # seems to be not responsive
+window.title('Teeworlds Map Generator')
+# window.geometry("1400x1200")
 
 # header
 tk.Label(text='enter settings below and hit generate').pack()
