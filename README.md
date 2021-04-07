@@ -1,8 +1,12 @@
 # tw-utils
 
-python scripts for teeworlds.
+Python scripts including a gores map generator for teeworlds.
 
 You can download the map generator application for windows [here](https://github.com/JonasLoos/tw-utils/releases/download/v0.1/tw-mapgen-windows.exe) (no installation required).
+
+layered | spiral
+--- | ---
+![Map 1](https://user-images.githubusercontent.com/33965649/113918790-22136980-97e3-11eb-92ba-0c47300ed3e8.png) | ![Map 2](https://user-images.githubusercontent.com/33965649/113918826-2a6ba480-97e3-11eb-8a58-32b703fe92c6.png)
 
 The scripts require Python 3.
 All results are saved to the current working directory if no other path is specified.
