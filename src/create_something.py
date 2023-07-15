@@ -1,4 +1,5 @@
-from create_layered import create_layered, CycleArray
+'''manually create a layered map'''
+from create_layered import create_layered
 
 
 

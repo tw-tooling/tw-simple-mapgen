@@ -1,3 +1,5 @@
+'''save images embedded in a map file'''
+
 import sys
 from map_reader import read
 from PIL import Image

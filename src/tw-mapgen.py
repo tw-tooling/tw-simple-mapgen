@@ -1,6 +1,9 @@
+'''gui to create a layered map'''
+
 import tkinter as tk
 from create_layered import create_layered
 from pathlib import Path
+
 
 
 config = [

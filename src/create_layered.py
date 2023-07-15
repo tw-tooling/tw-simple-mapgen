@@ -223,6 +223,7 @@ def create_layered(
     b = np.array([max(start_line_start[0], start_line_end[0]),max(start_line_start[1], start_line_end[1])]) + 1
     game[a[0]:b[0],a[1]:b[1],0] = 33  # create start line
     tmp = start_pos + rotations[directions[0]] * blocklen//2
+
     # create finish line
     a = pos - blocklen//2 + 1
     b = pos + blocklen//2

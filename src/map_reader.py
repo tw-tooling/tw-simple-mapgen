@@ -1,7 +1,4 @@
-# read a teeworlds map
-
-# for links to documentation see `map_creator.py`
-
+'''read a teeworlds map'''
 
 import sys, zlib
 

@@ -1,8 +1,6 @@
-# generate a teeworlds/ddnet map
+'''generate a teeworlds/ddnet map given items and data'''
 
-
-import sys, zlib
-import numpy as np
+import zlib
 from collections import defaultdict
 
 

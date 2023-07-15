@@ -5,6 +5,8 @@ import sys
 
 
 def create_random_blocks(filename=None):
+    '''crea a map with just some manually placed blocks'''
+
     # create the map matrix
     game = np.zeros((50,50,4), dtype='B')
     tiles = np.zeros((50,50,4), dtype='B')
@@ -30,6 +32,6 @@ def create_random_blocks(filename=None):
 # generate a map when the script is called from the command line
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        create_random_blocks(sys.argv[1])
+        create_random_blocks(filename=sys.argv[1])
     else:
         create_random_blocks()

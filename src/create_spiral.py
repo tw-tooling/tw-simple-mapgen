@@ -1,3 +1,5 @@
+'''create a spiral map'''
+
 import numpy as np
 from map_creator import create_map
 import sys
