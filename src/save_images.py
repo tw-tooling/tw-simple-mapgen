@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def save_images(filename):
-    items, data = read(sys.argv[1])
+    items, data = read(filename)
 
     # save images
     for item in items:
@@ -23,6 +23,6 @@ def save_images(filename):
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print('one arg required')
+        print('Usage: python save_images.py FILENAME')
         exit()
     save_images(sys.argv[1])
