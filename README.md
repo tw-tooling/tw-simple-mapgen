@@ -1,6 +1,6 @@
-# tw-utils
+# Simple Map-generator for Teeworlds
 
-Python scripts including a gores map generator for teeworlds.
+This Repository contains python scripts including a gores map generator for teeworlds.
 
 You can download the map generator application for windows [here](https://github.com/JonasLoos/tw-utils/releases/download/v0.1/tw-mapgen-windows.exe) (no installation required).
 
